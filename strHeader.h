@@ -1,13 +1,15 @@
-#define Length 50
-#define maxPatient 5
-#define maxSlots 5
+// #define Length 50
+// #define maxPatient 5
+// #define maxSlots 5
 
-typedef struct 
-{
-    char name[Length],gender;
-    int age , id ,reservedSlot ;
+// typedef struct 
+// {
+//     char name[Length],gender;
+//     int age , id ,reservedSlot ;
 
-}Patient;
+// }Patient;
 
-int addPatient(Patient newPatient);
-int findByID(int id);
+// int addPatient(Patient newPatient);
+// int findByID(int id);
+
+void on_login_clicked(GtkWidget *widget, gpointer data);

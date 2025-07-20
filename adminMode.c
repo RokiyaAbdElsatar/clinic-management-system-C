@@ -1,9 +1,14 @@
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h> 
 #include "ui_header.h"
+#include "strHeader.h"
 
 extern GtkWidget *admin_window;
 extern GtkWidget *main_window;
+
+GtkWidget *loginBTN;
+GtkWidget *password_Entry;
+
 
 void show_admin_mode(GtkWidget *parent_window) {
         gtk_widget_hide(main_window);
@@ -11,9 +16,7 @@ void show_admin_mode(GtkWidget *parent_window) {
         GtkWidget *fixed;
         GtkWidget *label;
         GtkWidget *backBTN;
-        GtkWidget *password_Entry;
         GtkWidget *password_Label;
-        GtkWidget *loginBTN;
 
         admin_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
         gtk_window_set_title(GTK_WINDOW(admin_window), "Admin Mode");
@@ -22,14 +25,20 @@ void show_admin_mode(GtkWidget *parent_window) {
         fixed = gtk_fixed_new();
         gtk_container_add(GTK_CONTAINER(admin_window), fixed);
 
+        // Load background image
+
         GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file_at_scale("./images/bg.png", 800, 700, FALSE, NULL);
         background = gtk_image_new_from_pixbuf(pixbuf);
         g_object_unref(pixbuf); 
         gtk_fixed_put(GTK_FIXED(fixed), background, 0, 0);   
 
+        // Create labels and buttons
+
         label = gtk_label_new(NULL);
         gtk_label_set_markup(GTK_LABEL(label), "<span font='24' style='italic' color='white'><b>Welcome to Admin</b></span>");
         gtk_fixed_put(GTK_FIXED(fixed), label, 200, 50);
+
+        // Password entry field and label and button
 
         password_Label = gtk_label_new(NULL);
         gtk_label_set_markup(GTK_LABEL(password_Label), "<span font='14' style='italic' color='white'><b>Enter Password</b></span>");
@@ -41,6 +50,31 @@ void show_admin_mode(GtkWidget *parent_window) {
         gtk_entry_set_invisible_char(GTK_ENTRY(password_Entry), '*'); // Set the character
         gtk_fixed_put(GTK_FIXED(fixed), password_Entry, 350, 310);
         gtk_widget_set_size_request(password_Entry, 200, 30);
+
+
+        loginBTN = gtk_button_new_with_label("Login");
+        gtk_fixed_put(GTK_FIXED(fixed), loginBTN, 480, 380);
+        g_signal_connect(loginBTN, "clicked", G_CALLBACK(on_login_clicked), NULL);
+        GtkCssProvider *provider2 = gtk_css_provider_new();
+        gtk_css_provider_load_from_data(provider2,
+                                     "button {"
+                                    "  font-size:18px;"
+                                    "  font-weight:bold;"
+                                    "  font-style:italic;"
+                                    "  background: #01c8ea;"
+                                    "  color: white;"
+                                    "  border-radius: 10px;"
+                                    "  border:1px solid #e8e9eb;"
+                                    "  padding: 10px 20px;"
+                                    "  min-width: 70px;"
+                                    "  min-height: 20px;"
+                                    "}",
+                                    -1, NULL);
+        GtkStyleContext *context2 = gtk_widget_get_style_context(loginBTN);
+        gtk_style_context_add_provider(context2, GTK_STYLE_PROVIDER(provider2), GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+
+        // Back button to return to main window
 
         backBTN = gtk_button_new_with_label("Back");
         gtk_fixed_put(GTK_FIXED(fixed), backBTN, 100, 600);
@@ -70,30 +104,7 @@ void show_admin_mode(GtkWidget *parent_window) {
 
 
 
-        loginBTN = gtk_button_new_with_label("Login");
-        gtk_fixed_put(GTK_FIXED(fixed), loginBTN, 480, 380);
-        g_signal_connect(loginBTN, "clicked", G_CALLBACK("on_login_clicked"), NULL);
-        GtkCssProvider *provider2 = gtk_css_provider_new();
-        gtk_css_provider_load_from_data(provider2,
-                                     "button {"
-                                    "  font-size:18px;"
-                                    "  font-weight:bold;"
-                                    "  font-style:italic;"
-                                    "  background: #01c8ea;"
-                                    "  color: white;"
-                                    "  border-radius: 10px;"
-                                    "  border:1px solid #e8e9eb;"
-                                    "  padding: 10px 20px;"
-                                    "  min-width: 70px;"
-                                    "  min-height: 20px;"
-                                    "}",
-                                    -1, NULL);
-        GtkStyleContext *context2 = gtk_widget_get_style_context(loginBTN);
-        gtk_style_context_add_provider(context2, GTK_STYLE_PROVIDER(provider2), GTK_STYLE_PROVIDER_PRIORITY_USER);
-
-
-
-
+     
 
         gtk_widget_show_all(admin_window);
         // gtk_widget_hide(parent_window);
