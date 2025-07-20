@@ -1,5 +1,6 @@
 {
   "files.associations": {
-    "ui_header.h": "c"
+    "ui_header.h": "c",
+    "strheader.h": "c"
   }
 }

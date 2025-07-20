@@ -2,9 +2,10 @@
 #include <gdk-pixbuf/gdk-pixbuf.h> 
 #include "ui_header.h"
 
+GtkWidget *admin_window;
+GtkWidget *main_window;
 int main(int argc, char *argv[]) {
 
-    GtkWidget *window;
     GtkWidget *label;
     GtkWidget *label2;
     GtkWidget *fixed;
@@ -13,14 +14,14 @@ int main(int argc, char *argv[]) {
     GtkWidget *background;
 
     gtk_init(&argc, &argv);
-    window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_title(GTK_WINDOW(window), "Clinic Management System");
-    gtk_window_set_default_size(GTK_WINDOW(window), 800, 700);
-    gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
-    g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+    main_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_title(GTK_WINDOW(main_window), "Clinic Management System");
+    gtk_window_set_default_size(GTK_WINDOW(main_window), 800, 700);
+    gtk_window_set_position(GTK_WINDOW(main_window), GTK_WIN_POS_CENTER);
+    g_signal_connect(main_window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
 
     fixed = gtk_fixed_new();
-    gtk_container_add(GTK_CONTAINER(window), fixed);
+    gtk_container_add(GTK_CONTAINER(main_window), fixed);
 
     GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file_at_scale("./images/bg.png", 800, 700, FALSE, NULL);
     background = gtk_image_new_from_pixbuf(pixbuf);
@@ -36,7 +37,7 @@ int main(int argc, char *argv[]) {
     gtk_fixed_put(GTK_FIXED(fixed), label2, 280, 175);
 
     adminModeBTN = gtk_button_new_with_label("Admin");
-    g_signal_connect(adminModeBTN, "clicked", G_CALLBACK(show_admin_mode), window);
+    g_signal_connect(adminModeBTN, "clicked", G_CALLBACK(show_admin_mode), main_window);
 
     GtkCssProvider *provider = gtk_css_provider_new();
     gtk_css_provider_load_from_data(provider,
@@ -63,6 +64,6 @@ int main(int argc, char *argv[]) {
     gtk_style_context_add_provider(context2, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
     gtk_fixed_put(GTK_FIXED(fixed), clintModeBTN, 100, 400);
 
-    gtk_widget_show_all(window);
+    gtk_widget_show_all(main_window);
     gtk_main();
 }

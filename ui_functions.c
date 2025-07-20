@@ -1,8 +1,11 @@
 #include "ui_header.h"
+#include "strHeader.h" 
 
-void open_admin_window() {
-    GtkWidget *admin_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-    gtk_window_set_title(GTK_WINDOW(admin_window), "Admin Mode");
-    gtk_window_set_default_size(GTK_WINDOW(admin_window), 400, 300);
-    gtk_widget_show_all(admin_window);
+#include <gtk/gtk.h>
+
+extern GtkWidget *admin_window;
+extern GtkWidget *main_window;
+void on_back_clicked(GtkWidget *widget, gpointer data) {
+    gtk_widget_hide(admin_window);
+    gtk_widget_show_all(main_window);
 }
