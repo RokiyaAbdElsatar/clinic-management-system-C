@@ -1,7 +1,7 @@
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h> 
-#include "../ui_header.h"
-#include "../strHeader.h"
+#include "../include/ui_header.h"
+#include "../include/strHeader.h"
 
 extern GtkWidget *admin_window;
 extern GtkWidget *main_window;

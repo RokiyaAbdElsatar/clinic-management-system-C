@@ -1,6 +1,6 @@
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h> 
-#include "ui_header.h"
+#include "../include/ui_header.h"
 
 GtkWidget *admin_window;
 GtkWidget *clinet_window;

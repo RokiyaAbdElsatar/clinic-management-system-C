@@ -1,6 +1,6 @@
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h> 
-#include "strHeader.h"
+#include "../include/strHeader.h"
 
 extern GtkWidget *loginBTN;
 extern GtkWidget *password_Entry;
