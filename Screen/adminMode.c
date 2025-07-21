@@ -35,8 +35,8 @@ void show_admin_mode(GtkWidget *parent_window) {
         // Create Glass Box effect
         GtkWidget *glass_box = gtk_frame_new(NULL);
         gtk_widget_set_name(glass_box, "glass_box");
-        gtk_fixed_put(GTK_FIXED(fixed), glass_box, 130, 35);
-        gtk_widget_set_size_request(glass_box, 550, 500);
+         gtk_fixed_put(GTK_FIXED(fixed), glass_box, 60, 36);
+        gtk_widget_set_size_request(glass_box, 670, 570);
 
         // Glass effect style
 
@@ -55,26 +55,60 @@ void show_admin_mode(GtkWidget *parent_window) {
 
         // Create labels and buttons
 
-        label = gtk_label_new(NULL);
-        gtk_label_set_markup(GTK_LABEL(label), "<span font='24' style='italic' color='#292843'><b>Welcome to Admin</b></span>");
+         label = gtk_label_new("Welcome to Admin");
+        gtk_widget_set_name(label, "welcome-label");
+        GtkCssProvider *providerStroke = gtk_css_provider_new();
+        gtk_css_provider_load_from_data(providerStroke,
+                                        "#welcome-label {\n"
+                                        "  font-size: 40px;\n"
+                                        "  font-style: italic;\n"
+                                        "  font-weight: bold;\n"
+                                        "  color: #0078a9;\n"
+                                        "  text-shadow: -1px -1px 0 white,\n"
+                                        "               1px -1px 0 white,\n"
+                                        "              -1px 1px 0 white,\n"
+                                        "               1px 1px 0 white;\n"
+                                        "}", -1, NULL);
+        GtkStyleContext *contextStroke = gtk_widget_get_style_context(label);
+        gtk_style_context_add_provider(contextStroke,
+                                       GTK_STYLE_PROVIDER(providerStroke),
+                                       GTK_STYLE_PROVIDER_PRIORITY_USER);
         gtk_fixed_put(GTK_FIXED(fixed), label, 200, 50);
 
         // Password entry field and label and button
 
-        password_Label = gtk_label_new(NULL);
-        gtk_label_set_markup(GTK_LABEL(password_Label), "<span font='14' style='italic' color='#292843'><b>Enter Password</b></span>");
-        gtk_fixed_put(GTK_FIXED(fixed), password_Label, 160, 310);
+        password_Label = gtk_label_new("Enter the password :");
+        gtk_widget_set_name(password_Label, "password-label");
+        GtkCssProvider *providerID = gtk_css_provider_new();
+        gtk_css_provider_load_from_data(providerID,
+                                        "#password-label {\n"
+                                        "  font-size: 20px;\n"
+                                        "  font-style: italic;\n"
+                                        "  color: #0078a9;\n"
+                                        "  font-weight: bold;\n"
+                                        "  text-shadow: -1px -1px 0 white,\n"
+                                        "               1px -1px 0 white,\n"
+                                        "              -1px 1px 0 white,\n"
+                                        "               1px 1px 0 white;\n"
+                                        "}",
+                                        -1, NULL);
+        GtkStyleContext *contextpassword = gtk_widget_get_style_context(password_Label);
+        gtk_style_context_add_provider(contextpassword,
+                                       GTK_STYLE_PROVIDER(providerID),
+                                       GTK_STYLE_PROVIDER_PRIORITY_USER);
+        gtk_fixed_put(GTK_FIXED(fixed), password_Label, 200, 300);
 
+        // Password entry field
         password_Entry = gtk_entry_new();
         gtk_entry_set_placeholder_text(GTK_ENTRY(password_Entry), "Enter Admin Password");
         gtk_entry_set_visibility(GTK_ENTRY(password_Entry), FALSE); // Hide the password
         gtk_entry_set_invisible_char(GTK_ENTRY(password_Entry), '*'); // Set the character
-        gtk_fixed_put(GTK_FIXED(fixed), password_Entry, 350, 310);
+        gtk_fixed_put(GTK_FIXED(fixed), password_Entry, 350, 350);
         gtk_widget_set_size_request(password_Entry, 200, 30);
 
 
         loginBTN = gtk_button_new_with_label("Login");
-        gtk_fixed_put(GTK_FIXED(fixed), loginBTN, 480, 380);
+        gtk_fixed_put(GTK_FIXED(fixed), loginBTN, 490, 400);
         g_signal_connect(loginBTN, "clicked", G_CALLBACK(on_login_clicked), NULL);
         GtkCssProvider *provider2 = gtk_css_provider_new();
         gtk_css_provider_load_from_data(provider2,
@@ -98,7 +132,7 @@ void show_admin_mode(GtkWidget *parent_window) {
         // Back button to return to main window
 
         backBTN = gtk_button_new_with_label("Back");
-        gtk_fixed_put(GTK_FIXED(fixed), backBTN, 100, 600);
+        gtk_fixed_put(GTK_FIXED(fixed), backBTN, 100, 620);
         g_signal_connect(backBTN, "clicked", G_CALLBACK(on_back_clicked), NULL);
         GtkCssProvider *provider = gtk_css_provider_new();
         gtk_css_provider_load_from_data(provider,

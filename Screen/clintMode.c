@@ -6,6 +6,9 @@
 extern GtkWidget *clinet_window;
 extern GtkWidget *main_window;
 
+ GtkWidget *ID_text_Entry;
+ GtkWidget *SearchBTN;
+
 
 void show_clinet_mode(GtkWidget *parent_window) {
         gtk_widget_hide(main_window);
@@ -32,8 +35,8 @@ void show_clinet_mode(GtkWidget *parent_window) {
            // Create Glass Box effect
         GtkWidget *glass_box = gtk_frame_new(NULL);
         gtk_widget_set_name(glass_box, "glass_box");
-        gtk_fixed_put(GTK_FIXED(fixed), glass_box, 130, 35);
-        gtk_widget_set_size_request(glass_box, 550, 500);
+        gtk_fixed_put(GTK_FIXED(fixed), glass_box, 60, 36);
+        gtk_widget_set_size_request(glass_box, 670, 570);
         
         
         // Glass effect style
@@ -54,18 +57,84 @@ void show_clinet_mode(GtkWidget *parent_window) {
 
         // Create labels and buttons
 
-        label = gtk_label_new(NULL);
-        gtk_label_set_markup(GTK_LABEL(label), "<span font='24' style='italic' color='#292843'><b>Welcome to Clinet</b></span>");
+        label = gtk_label_new("Welcome to Clinet");
+        gtk_widget_set_name(label, "welcome-label");
+        GtkCssProvider *providerStroke = gtk_css_provider_new();
+        gtk_css_provider_load_from_data(providerStroke,
+                                        "#welcome-label {\n"
+                                        "  font-size: 40px;\n"
+                                        "  font-style: italic;\n"
+                                        "  font-weight: bold;\n"
+                                        "  color: #0078a9;\n"
+                                        "  text-shadow: -1px -1px 0 white,\n"
+                                        "               1px -1px 0 white,\n"
+                                        "              -1px 1px 0 white,\n"
+                                        "               1px 1px 0 white;\n"
+                                        "}", -1, NULL);
+        GtkStyleContext *contextStroke = gtk_widget_get_style_context(label);
+        gtk_style_context_add_provider(contextStroke,
+                                       GTK_STYLE_PROVIDER(providerStroke),
+                                       GTK_STYLE_PROVIDER_PRIORITY_USER);
         gtk_fixed_put(GTK_FIXED(fixed), label, 200, 50);
 
-        IDlabel = gtk_label_new(NULL);
-        gtk_label_set_markup(GTK_LABEL(IDlabel), "<span font='14' style='italic' color='#292843'><b>Enter the Patient ID</b></span>");
-        gtk_fixed_put(GTK_FIXED(fixed), IDlabel, 200, 320);
+        IDlabel = gtk_label_new("Enter the Patient ID :");
+        gtk_widget_set_name(IDlabel, "ID-label");
+        GtkCssProvider *providerID = gtk_css_provider_new();
+        gtk_css_provider_load_from_data(providerID,
+                                        "#ID-label {\n"
+                                        "  font-size: 20px;\n"
+                                        "  font-style: italic;\n"
+                                        "  color: #0078a9;\n"
+                                        "  font-weight: bold;\n"
+                                        "  text-shadow: -1px -1px 0 white,\n"
+                                        "               1px -1px 0 white,\n"
+                                        "              -1px 1px 0 white,\n"
+                                        "               1px 1px 0 white;\n"
+                                        "}",
+                                        -1, NULL);
+        GtkStyleContext *contextID = gtk_widget_get_style_context(IDlabel);
+        gtk_style_context_add_provider(contextID,
+                                       GTK_STYLE_PROVIDER(providerID),
+                                       GTK_STYLE_PROVIDER_PRIORITY_USER);
+        gtk_fixed_put(GTK_FIXED(fixed), IDlabel, 200, 300);
+
+// Patient ID entry field and label and button
+        ID_text_Entry = gtk_entry_new();
+        gtk_entry_set_placeholder_text(GTK_ENTRY(ID_text_Entry), "Enter ID");
+        gtk_fixed_put(GTK_FIXED(fixed), ID_text_Entry, 350, 350);
+        gtk_widget_set_size_request(ID_text_Entry, 200, 30);
+
+        SearchBTN = gtk_button_new_with_label("Search");
+        gtk_fixed_put(GTK_FIXED(fixed), SearchBTN, 490, 400);
+        g_signal_connect(SearchBTN, "clicked", G_CALLBACK("on_search_clicked"), NULL);
+        GtkCssProvider *providerSearch = gtk_css_provider_new();
+         gtk_css_provider_load_from_data(providerSearch,
+                                     "button {"
+                                    "  font-size:18px;"
+                                    "  font-weight:bold;"
+                                    "  font-style:italic;"
+                                    "  background: #01c8ea;"
+                                    "  color: white;"
+                                    "  border-radius: 10px;"
+                                    "  border:1px solid #e8e9eb;"
+                                    "  padding: 10px 20px;"
+                                    "  min-width: 70px;"
+                                    "  min-height: 20px;"
+                                    "}",
+                                    -1, NULL);
+        GtkStyleContext *contextSearch = gtk_widget_get_style_context(SearchBTN);
+        gtk_style_context_add_provider(contextSearch, GTK_STYLE_PROVIDER(providerSearch), GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+
+
+
+
+
 
         // Back button to return to main window
 
         backBTN = gtk_button_new_with_label("Back");
-        gtk_fixed_put(GTK_FIXED(fixed), backBTN, 100, 600);
+        gtk_fixed_put(GTK_FIXED(fixed), backBTN, 100, 620);
         g_signal_connect(backBTN, "clicked", G_CALLBACK(on_back_clicked), NULL);
         GtkCssProvider *provider = gtk_css_provider_new();
         gtk_css_provider_load_from_data(provider,

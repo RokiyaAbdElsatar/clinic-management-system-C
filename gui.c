@@ -33,8 +33,8 @@ int main(int argc, char *argv[]) {
         // Create Glass Box effect
         GtkWidget *glass_box = gtk_frame_new(NULL);
         gtk_widget_set_name(glass_box, "glass_box");
-        gtk_fixed_put(GTK_FIXED(fixed), glass_box, 70, 30);
-        gtk_widget_set_size_request(glass_box, 650, 550);
+      gtk_fixed_put(GTK_FIXED(fixed), glass_box, 60, 36);
+        gtk_widget_set_size_request(glass_box, 670, 570);
 
         // Glass effect style
 
@@ -52,12 +52,43 @@ int main(int argc, char *argv[]) {
         gtk_style_context_add_provider(glass_context, GTK_STYLE_PROVIDER(glass_provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
 
 
-    label = gtk_label_new(NULL);
-    gtk_label_set_markup(GTK_LABEL(label), "<span font='24' style='italic' color='#292843'><b>Welcome to clinic system</b></span>");
-    gtk_fixed_put(GTK_FIXED(fixed), label, 170, 50);
+    label =gtk_label_new("Welcome to clinic system");
+    gtk_widget_set_name(label, "welcome-label");
+    GtkCssProvider *providerStroke = gtk_css_provider_new();
+    gtk_css_provider_load_from_data(providerStroke,
+    "#welcome-label {\n"
+    "  font-size: 40px;\n"
+    "  font-style: italic;\n"
+    "  font-weight: bold;\n"
+    "  color: #0078a9;\n"
+    "  text-shadow: -1px -1px 0 white,\n"
+    "               1px -1px 0 white,\n"
+    "              -1px 1px 0 white,\n"
+    "               1px 1px 0 white;\n"
+    "}", -1, NULL);
+    GtkStyleContext *contextStroke = gtk_widget_get_style_context(label);
+    gtk_style_context_add_provider(contextStroke,
+    GTK_STYLE_PROVIDER(providerStroke),
+    GTK_STYLE_PROVIDER_PRIORITY_USER);
+    gtk_fixed_put(GTK_FIXED(fixed), label, 175, 50);
 
-    label2 = gtk_label_new(NULL);
-    gtk_label_set_markup(GTK_LABEL(label2), "<span font='18' style='italic' color='#292843'><b>Choose the Mode</b></span>");
+    label2 = gtk_label_new("Choose the Mode");
+    gtk_widget_set_name(label2, "mode-label");
+    GtkCssProvider *providerlabel2 = gtk_css_provider_new();
+    gtk_css_provider_load_from_data(providerlabel2,
+    "#mode-label {\n"
+    "  font-size: 35px;\n"
+    "  font-style: italic;\n"
+    "  color: #0078a9;\n"
+        "  font-weight: bold;\n"
+    "  text-shadow: -1px -1px 0 white,\n"
+    "               1px -1px 0 white,\n"
+    "              -1px 1px 0 white,\n"
+    "               1px 1px 0 white;\n"
+    "}", -1, NULL);
+    GtkStyleContext *contextlabel2 = gtk_widget_get_style_context(label2);
+    gtk_style_context_add_provider(contextlabel2, GTK_STYLE_PROVIDER(providerlabel2), GTK_STYLE_PROVIDER_PRIORITY_USER);
+
     gtk_fixed_put(GTK_FIXED(fixed), label2, 280, 175);
 
     adminModeBTN = gtk_button_new_with_label("Admin");
