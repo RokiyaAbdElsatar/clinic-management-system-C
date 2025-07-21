@@ -3,6 +3,7 @@
 #include "ui_header.h"
 
 GtkWidget *admin_window;
+GtkWidget *clinet_window;
 GtkWidget *main_window;
 int main(int argc, char *argv[]) {
 
@@ -28,12 +29,35 @@ int main(int argc, char *argv[]) {
     g_object_unref(pixbuf); 
     gtk_fixed_put(GTK_FIXED(fixed), background, 0, 0);
 
+    
+        // Create Glass Box effect
+        GtkWidget *glass_box = gtk_frame_new(NULL);
+        gtk_widget_set_name(glass_box, "glass_box");
+        gtk_fixed_put(GTK_FIXED(fixed), glass_box, 70, 30);
+        gtk_widget_set_size_request(glass_box, 650, 550);
+
+        // Glass effect style
+
+        GtkCssProvider *glass_provider = gtk_css_provider_new();
+        gtk_css_provider_load_from_data(glass_provider,
+                                        "#glass_box {"
+                                        "  background-color: rgba(1, 200, 234, 0.1);" 
+                                        "  border-radius: 20px;"
+                                        "  border: 1px solid rgba(255, 255, 255, 0.3);"
+                                        "  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);"
+                                        "  -gtk-icon-shadow: none;"    
+                                        "}",
+                                        -1, NULL);
+        GtkStyleContext *glass_context = gtk_widget_get_style_context(glass_box);
+        gtk_style_context_add_provider(glass_context, GTK_STYLE_PROVIDER(glass_provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+
     label = gtk_label_new(NULL);
-    gtk_label_set_markup(GTK_LABEL(label), "<span font='24' style='italic'><b>Welcome to clinic system</b></span>");
+    gtk_label_set_markup(GTK_LABEL(label), "<span font='24' style='italic' color='#292843'><b>Welcome to clinic system</b></span>");
     gtk_fixed_put(GTK_FIXED(fixed), label, 170, 50);
 
     label2 = gtk_label_new(NULL);
-    gtk_label_set_markup(GTK_LABEL(label2), "<span font='18' style='italic'><b>Choose the Mode</b></span>");
+    gtk_label_set_markup(GTK_LABEL(label2), "<span font='18' style='italic' color='#292843'><b>Choose the Mode</b></span>");
     gtk_fixed_put(GTK_FIXED(fixed), label2, 280, 175);
 
     adminModeBTN = gtk_button_new_with_label("Admin");
@@ -57,12 +81,13 @@ int main(int argc, char *argv[]) {
 
     GtkStyleContext *context = gtk_widget_get_style_context(adminModeBTN);
     gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
-    gtk_fixed_put(GTK_FIXED(fixed), adminModeBTN, 550, 400);
+    gtk_fixed_put(GTK_FIXED(fixed), adminModeBTN, 500, 400);
 
     clintModeBTN = gtk_button_new_with_label("Clinet");
+    g_signal_connect(clintModeBTN, "clicked", G_CALLBACK(show_clinet_mode), main_window);
     GtkStyleContext *context2 = gtk_widget_get_style_context(clintModeBTN);
     gtk_style_context_add_provider(context2, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
-    gtk_fixed_put(GTK_FIXED(fixed), clintModeBTN, 100, 400);
+    gtk_fixed_put(GTK_FIXED(fixed), clintModeBTN, 150, 400);
 
     gtk_widget_show_all(main_window);
     gtk_main();
