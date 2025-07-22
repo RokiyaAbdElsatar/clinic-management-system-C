@@ -1,5 +1,5 @@
-#include "ui_header.h"
-#include "strHeader.h" 
+#include "../include/ui_header.h"
+// #include "../include/strHeader.h"
 
 #include <gtk/gtk.h>
 

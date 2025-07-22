@@ -1,0 +1,283 @@
+#include <gtk/gtk.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
+#include "../include/ui_header.h"
+#include "../include/strHeader.h"
+
+extern GtkWidget *admin_window;
+extern GtkWidget *main_window;
+
+GtkWidget *admin_dashboard;
+
+void show_admin_dashboard(GtkWidget *parent_window)
+{
+    gtk_widget_hide(admin_window);
+    GtkWidget *background;
+    GtkWidget *fixed;
+    // GtkWidget *label;
+    GtkWidget *backBTN;
+
+    GtkWidget *addBTN;
+    GtkWidget *editBTN;
+    GtkWidget *SlotBTN;
+    GtkWidget *cancelBTN;
+
+    admin_dashboard = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_title(GTK_WINDOW(admin_dashboard), "Admin Mode");
+    gtk_window_set_default_size(GTK_WINDOW(admin_dashboard), 800, 700);
+
+    fixed = gtk_fixed_new();
+    gtk_container_add(GTK_CONTAINER(admin_dashboard), fixed);
+
+    // Load background image
+
+    GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file_at_scale("./images/bg.png", 800, 700, FALSE, NULL);
+    background = gtk_image_new_from_pixbuf(pixbuf);
+    g_object_unref(pixbuf);
+    gtk_fixed_put(GTK_FIXED(fixed), background, 0, 0);
+
+    // Create Glass Box effect
+    GtkWidget *glass_box = gtk_frame_new(NULL);
+    gtk_widget_set_name(glass_box, "glass_box");
+    gtk_fixed_put(GTK_FIXED(fixed), glass_box, 60, 36);
+    gtk_widget_set_size_request(glass_box, 670, 570);
+
+    // Glass effect style
+
+    GtkCssProvider *glass_provider = gtk_css_provider_new();
+    gtk_css_provider_load_from_data(glass_provider,
+                                    "#glass_box {"
+                                    "  background-color: rgba(1, 200, 234, 0.1);"
+                                    "  border-radius: 20px;"
+                                    "  border: 1px solid rgba(255, 255, 255, 0.3);"
+                                    "  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);"
+                                    "  -gtk-icon-shadow: none;"
+                                    "}",
+                                    -1, NULL);
+    GtkStyleContext *glass_context = gtk_widget_get_style_context(glass_box);
+    gtk_style_context_add_provider(glass_context, GTK_STYLE_PROVIDER(glass_provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+    // Create labels and buttons
+
+    //  label = gtk_label_new("Welcome Admin");
+    // gtk_widget_set_name(label, "welcome-label");
+    // GtkCssProvider *providerStroke = gtk_css_provider_new();
+    // gtk_css_provider_load_from_data(providerStroke,
+    //                                 "#welcome-label {\n"
+    //                                 "  font-size: 40px;\n"
+    //                                 "  font-style: italic;\n"
+    //                                 "  font-weight: bold;\n"
+    //                                 "  color: #0078a9;\n"
+    //                                 "  text-shadow: -1px -1px 0 white,\n"
+    //                                 "               1px -1px 0 white,\n"
+    //                                 "              -1px 1px 0 white,\n"
+    //                                 "               1px 1px 0 white;\n"
+    //                                 "}", -1, NULL);
+    // GtkStyleContext *contextStroke = gtk_widget_get_style_context(label);
+    // gtk_style_context_add_provider(contextStroke,
+    //                                GTK_STYLE_PROVIDER(providerStroke),
+    //                                GTK_STYLE_PROVIDER_PRIORITY_USER);
+    // gtk_fixed_put(GTK_FIXED(fixed), label, 200, 50);
+
+    // Buttons
+
+    // ===== VBox Layout inside glass_box =====
+    GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
+    gtk_container_add(GTK_CONTAINER(glass_box), vbox);
+
+    // ===== HBox for Buttons =====
+    GtkWidget *button_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
+    gtk_box_pack_start(GTK_BOX(vbox), button_box, FALSE, FALSE, 10);
+
+    // ===== ADD Button =====
+
+    addBTN = gtk_button_new_with_label("Add Patient");
+
+    GtkCssProvider *provideraddBTN = gtk_css_provider_new();
+    gtk_css_provider_load_from_data(provideraddBTN,
+                                    "button {"
+                                    "  font-size:18px;"
+                                    "  font-weight:bold;"
+                                    "  font-style:italic;"
+                                    "  background: #01c8ea;"
+                                    "  color: white;"
+                                    "  border-radius: 10px;"
+                                    "  border:1px solid #e8e9eb;"
+                                    "  padding: 10px 20px;"
+                                    "  min-width: 80px;"
+                                    "  min-height: 30px;"
+                                    "}",
+                                    -1, NULL);
+
+    GtkStyleContext *contextaddBTN = gtk_widget_get_style_context(addBTN);
+    gtk_style_context_add_provider(contextaddBTN, GTK_STYLE_PROVIDER(provideraddBTN), GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+    // ===== EDIT Button =====
+
+    editBTN = gtk_button_new_with_label("Edit Patient");
+    GtkCssProvider *providereditBTN = gtk_css_provider_new();
+    gtk_css_provider_load_from_data(providereditBTN,
+                                    "button {"
+                                    "  font-size:18px;"
+                                    "  font-weight:bold;"
+                                    "  font-style:italic;"
+                                    "  background: #01c8ea;"
+                                    "  color: white;"
+                                    "  border-radius: 10px;"
+                                    "  border:1px solid #e8e9eb;"
+                                    "  padding: 10px 20px;"
+                                    "  min-width: 80px;"
+                                    "  min-height: 30px;"
+                                    "}",
+                                    -1, NULL);
+
+    GtkStyleContext *contexteditBTN = gtk_widget_get_style_context(editBTN);
+    gtk_style_context_add_provider(contexteditBTN, GTK_STYLE_PROVIDER(providereditBTN), GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+    // ===== SLOT Button =====
+
+    SlotBTN = gtk_button_new_with_label("Reserve Slot");
+    GtkCssProvider *providerslotBTN = gtk_css_provider_new();
+    gtk_css_provider_load_from_data(providerslotBTN,
+                                    "button {"
+                                    "  font-size:18px;"
+                                    "  font-weight:bold;"
+                                    "  font-style:italic;"
+                                    "  background: #01c8ea;"
+                                    "  color: white;"
+                                    "  border-radius: 10px;"
+                                    "  border:1px solid #e8e9eb;"
+                                    "  padding: 10px 20px;"
+                                    "  min-width: 80px;"
+                                    "  min-height: 30px;"
+                                    "}",
+                                    -1, NULL);
+
+    GtkStyleContext *contextslotBTN = gtk_widget_get_style_context(SlotBTN);
+    gtk_style_context_add_provider(contextslotBTN, GTK_STYLE_PROVIDER(providerslotBTN), GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+    // ===== CANCEL Button =====
+
+    cancelBTN = gtk_button_new_with_label("Cancel Reservation");
+    GtkCssProvider *providercancelBTN = gtk_css_provider_new();
+    gtk_css_provider_load_from_data(providercancelBTN,
+                                    "button {"
+                                    "  font-size:18px;"
+                                    "  font-weight:bold;"
+                                    "  font-style:italic;"
+                                    "  background: #01c8ea;"
+                                    "  color: white;"
+                                    "  border-radius: 10px;"
+                                    "  border:1px solid #e8e9eb;"
+                                    "  padding: 10px 20px;"
+                                    "  min-width: 80px;"
+                                    "  min-height: 30px;"
+                                    "}",
+                                    -1, NULL);
+
+    GtkStyleContext *contextcancelBTN = gtk_widget_get_style_context(cancelBTN);
+    gtk_style_context_add_provider(contextcancelBTN, GTK_STYLE_PROVIDER(providercancelBTN), GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+    gtk_box_pack_start(GTK_BOX(button_box), addBTN, TRUE, TRUE, 5);
+    gtk_box_pack_start(GTK_BOX(button_box), editBTN, TRUE, TRUE, 5);
+    gtk_box_pack_start(GTK_BOX(button_box), SlotBTN, TRUE, TRUE, 5);
+    gtk_box_pack_start(GTK_BOX(button_box), cancelBTN, TRUE, TRUE, 5);
+
+    // TODO: Add signals later
+    // g_signal_connect(addBTN, "clicked", G_CALLBACK(on_add_clicked), NULL);
+    // g_signal_connect(editBTN, "clicked", G_CALLBACK(on_edit_clicked), NULL);
+    // g_signal_connect(SlotBTN, "clicked", G_CALLBACK(on_reserve_clicked), NULL);
+    // g_signal_connect(cancelBTN, "clicked", G_CALLBACK(on_cancel_clicked), NULL);
+
+    // ===== Table (TreeView for patient data) =====
+    GtkWidget *scrolled_window = gtk_scrolled_window_new(NULL, NULL);
+    gtk_widget_set_size_request(scrolled_window, 630, 400);
+    gtk_box_pack_start(GTK_BOX(vbox), scrolled_window, TRUE, TRUE, 10);
+
+    GtkWidget *tree_view = gtk_tree_view_new();
+
+    GtkCssProvider *providerTable = gtk_css_provider_new();
+    gtk_css_provider_load_from_data(providerTable,
+                                    "treeview, scrolledwindow { background-color: transparent; }",
+                                    -1, NULL);
+
+    GtkStyleContext *context;
+
+    // Apply to tree_view
+    context = gtk_widget_get_style_context(tree_view);
+    gtk_style_context_add_provider(context,
+                                   GTK_STYLE_PROVIDER(providerTable),
+                                   GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+    // Apply to scrolled_window
+    context = gtk_widget_get_style_context(scrolled_window);
+    gtk_style_context_add_provider(context,
+                                   GTK_STYLE_PROVIDER(providerTable),
+                                   GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+    gtk_container_add(GTK_CONTAINER(scrolled_window), tree_view);
+
+    // ==== Add Columns to the Tree View ====
+    GtkCellRenderer *renderer;
+    GtkTreeViewColumn *column;
+    GdkRGBA transparent_bg;
+
+    gdk_rgba_parse(&transparent_bg, "rgba(255, 255, 255, 0.0)"); // شفاف تمامًا
+
+    renderer = gtk_cell_renderer_text_new();
+    g_object_set(renderer, "cell-background-rgba", &transparent_bg, NULL);
+
+    column = gtk_tree_view_column_new_with_attributes("ID", renderer, "text", 0, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(tree_view), column);
+
+    column = gtk_tree_view_column_new_with_attributes("Name", renderer, "text", 1, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(tree_view), column);
+
+    column = gtk_tree_view_column_new_with_attributes("Age", renderer, "text", 2, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(tree_view), column);
+
+    column = gtk_tree_view_column_new_with_attributes("Gender", renderer, "text", 3, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(tree_view), column);
+
+    column = gtk_tree_view_column_new_with_attributes("Reservation", renderer, "text", 4, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(tree_view), column);
+
+    // ==== Create and Set Tree Model ====
+    GtkListStore *store = gtk_list_store_new(5, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING);
+    // Example dummy data (you can loop through your linked list here)
+    gtk_list_store_insert_with_values(store, NULL, -1,
+                                      0, "1001",
+                                      1, "Ahmed",
+                                      2, 25,
+                                      3, "Male",
+                                      4, "2:00 PM", -1);
+
+    gtk_tree_view_set_model(GTK_TREE_VIEW(tree_view), GTK_TREE_MODEL(store));
+    g_object_unref(store);
+
+    // Back button to return to main window
+
+    backBTN = gtk_button_new_with_label("Back");
+    gtk_fixed_put(GTK_FIXED(fixed), backBTN, 100, 620);
+    g_signal_connect(backBTN, "clicked", G_CALLBACK(on_back_clicked), NULL);
+    GtkCssProvider *provider = gtk_css_provider_new();
+    gtk_css_provider_load_from_data(provider,
+                                    "button {"
+                                    "  font-size:18px;"
+                                    "  font-weight:bold;"
+                                    "  font-style:italic;"
+                                    "  background: transparent;"
+                                    "  color: #04A2BE;"
+                                    "  border-radius: 10px;"
+                                    "  border:1px solid #04A2BE;"
+                                    "  padding: 10px 20px;"
+                                    "  min-width: 80px;"
+                                    "  min-height: 25px;"
+                                    "}",
+                                    -1, NULL);
+
+    GtkStyleContext *contextbackBTN = gtk_widget_get_style_context(backBTN);
+    gtk_style_context_add_provider(contextbackBTN, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+    gtk_widget_show_all(admin_dashboard);
+    // gtk_widget_hide(parent_window);
+}
