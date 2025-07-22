@@ -13,7 +13,6 @@ void show_admin_dashboard(GtkWidget *parent_window)
     gtk_widget_hide(admin_window);
     GtkWidget *background;
     GtkWidget *fixed;
-    // GtkWidget *label;
     GtkWidget *backBTN;
 
     GtkWidget *addBTN;
@@ -56,31 +55,8 @@ void show_admin_dashboard(GtkWidget *parent_window)
     GtkStyleContext *glass_context = gtk_widget_get_style_context(glass_box);
     gtk_style_context_add_provider(glass_context, GTK_STYLE_PROVIDER(glass_provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
 
-    // Create labels and buttons
 
-    //  label = gtk_label_new("Welcome Admin");
-    // gtk_widget_set_name(label, "welcome-label");
-    // GtkCssProvider *providerStroke = gtk_css_provider_new();
-    // gtk_css_provider_load_from_data(providerStroke,
-    //                                 "#welcome-label {\n"
-    //                                 "  font-size: 40px;\n"
-    //                                 "  font-style: italic;\n"
-    //                                 "  font-weight: bold;\n"
-    //                                 "  color: #0078a9;\n"
-    //                                 "  text-shadow: -1px -1px 0 white,\n"
-    //                                 "               1px -1px 0 white,\n"
-    //                                 "              -1px 1px 0 white,\n"
-    //                                 "               1px 1px 0 white;\n"
-    //                                 "}", -1, NULL);
-    // GtkStyleContext *contextStroke = gtk_widget_get_style_context(label);
-    // gtk_style_context_add_provider(contextStroke,
-    //                                GTK_STYLE_PROVIDER(providerStroke),
-    //                                GTK_STYLE_PROVIDER_PRIORITY_USER);
-    // gtk_fixed_put(GTK_FIXED(fixed), label, 200, 50);
-
-    // Buttons
-
-    // ===== VBox Layout inside glass_box =====
+    // ===== VBox Layout for admin functions =====
     GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
     gtk_container_add(GTK_CONTAINER(glass_box), vbox);
 
@@ -221,7 +197,7 @@ void show_admin_dashboard(GtkWidget *parent_window)
     GtkTreeViewColumn *column;
     GdkRGBA transparent_bg;
 
-    gdk_rgba_parse(&transparent_bg, "rgba(255, 255, 255, 0.0)"); // شفاف تمامًا
+    gdk_rgba_parse(&transparent_bg, "rgba(255, 255, 255, 0.0)");
 
     renderer = gtk_cell_renderer_text_new();
     g_object_set(renderer, "cell-background-rgba", &transparent_bg, NULL);
@@ -243,7 +219,8 @@ void show_admin_dashboard(GtkWidget *parent_window)
 
     // ==== Create and Set Tree Model ====
     GtkListStore *store = gtk_list_store_new(5, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING);
-    // Example dummy data (you can loop through your linked list here)
+    
+    // Example for check table design
     gtk_list_store_insert_with_values(store, NULL, -1,
                                       0, "1001",
                                       1, "Ahmed",
@@ -253,6 +230,8 @@ void show_admin_dashboard(GtkWidget *parent_window)
 
     gtk_tree_view_set_model(GTK_TREE_VIEW(tree_view), GTK_TREE_MODEL(store));
     g_object_unref(store);
+
+    
 
     // Back button to return to main window
 
