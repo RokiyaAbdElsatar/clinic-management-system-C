@@ -190,6 +190,7 @@ void show_admin_dashboard(GtkWidget *parent_window)
     g_signal_connect(addBTN, "clicked", G_CALLBACK(displayGUI), admin_dashboard);
     g_signal_connect(editBTN, "clicked", G_CALLBACK(edit_patient_window), admin_dashboard);
     g_signal_connect(SlotBTN, "clicked", G_CALLBACK(slot_patient_window), admin_dashboard);
+    g_signal_connect(cancelBTN, "clicked", G_CALLBACK(on_cancel_reservation_clicked), admin_dashboard);
 
     backBTN = gtk_button_new_with_label("Back");
     gtk_fixed_put(GTK_FIXED(fixed), backBTN, 100, 620);

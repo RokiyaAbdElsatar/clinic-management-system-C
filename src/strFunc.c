@@ -22,8 +22,10 @@ const char *default_slots[SLOT_COUNT] = {
     "2:30pm to 3:00pm",
     "3:00pm to 3:30pm",
     "4:00pm to 4:30pm",
-    "4:30pm to 5:00pm"
-};
+    "4:30pm to 5:00pm"};
+
+bool slot_reserved[SLOT_COUNT] = {false, false, false, false, false};
+
 
 void on_login_clicked(GtkWidget *widget, gpointer data)
 {
@@ -90,7 +92,8 @@ Patient *findByID(int id)
     return NULL; // Patient not found
 }
 
-bool is_patient_id_exists(int id) {
+bool is_patient_id_exists(int id)
+{
     return findByID(id) != NULL;
 }
 
@@ -132,18 +135,20 @@ void editPatient(int id, const char *newName, int newAge, const char *newGender)
     }
 }
 
-
-bool is_slot_reserved(const char *slot) {
+bool is_slot_reserved(const char *slot)
+{
     Reservation *curr = res_head;
-    while (curr) {
-        if (strcmp(curr->slot, slot) == 0) return true;
+    while (curr)
+    {
+        if (strcmp(curr->slot, slot) == 0)
+            return true;
         curr = curr->next;
     }
     return false;
 }
 
-
-void add_reservation(int patient_id, const char *slot) {
+void add_reservation(int patient_id, const char *slot)
+{
     Reservation *new_res = malloc(sizeof(Reservation));
     new_res->patient_id = patient_id;
     strcpy(new_res->slot, slot);
@@ -151,4 +156,38 @@ void add_reservation(int patient_id, const char *slot) {
     res_head = new_res;
 }
 
+bool cancel_reservation_by_id(int patient_id)
+{
+    Reservation *current = res_head;
+    Reservation *prev = NULL;
 
+    while (current != NULL)
+    {
+        if (current->patient_id == patient_id)
+        {
+            if (prev == NULL)
+            {
+                res_head = current->next;
+            }
+            else
+            {
+                prev->next = current->next;
+            }
+
+            for (int i = 0; i < SLOT_COUNT; i++)
+            {
+                if (strcmp(current->slot, default_slots[i]) == 0)
+                {
+                    slot_reserved[i] = false;
+                    break;
+                }
+            }
+
+            free(current);
+            return true;
+        }
+        prev = current;
+        current = current->next;
+    }
+    return false; // No reservation found
+}

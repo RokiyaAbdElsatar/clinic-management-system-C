@@ -59,5 +59,6 @@ void add_reservation(int patient_id, const char *slot);
 
 void reserve_slot_button_clicked(GtkWidget *widget, gpointer user_data);
 
+bool cancel_reservation_by_id(int patient_id);
 
 #endif 

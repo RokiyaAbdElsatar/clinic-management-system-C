@@ -507,3 +507,48 @@ void on_search_clicked(GtkWidget *widget, gpointer data)
     gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
 }
+
+
+void on_cancel_reservation_clicked(GtkWidget *widget, gpointer data) {
+    GtkWidget *dialog, *content_area, *entry, *label;
+    GtkDialogFlags flags = GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT;
+
+    dialog = gtk_dialog_new_with_buttons("Cancel Reservation",
+                                         GTK_WINDOW(data),
+                                         flags,
+                                         "_Cancel", GTK_RESPONSE_CANCEL,
+                                         "_OK", GTK_RESPONSE_OK,
+                                         NULL);
+
+    content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+    label = gtk_label_new("Enter Patient ID to cancel reservation:");
+    entry = gtk_entry_new();
+
+    gtk_box_pack_start(GTK_BOX(content_area), label, FALSE, FALSE, 5);
+    gtk_box_pack_start(GTK_BOX(content_area), entry, FALSE, FALSE, 5);
+
+    gtk_widget_show_all(dialog);
+
+    gint response = gtk_dialog_run(GTK_DIALOG(dialog));
+
+    if (response == GTK_RESPONSE_OK) {
+        const gchar *id_text = gtk_entry_get_text(GTK_ENTRY(entry));
+        int patient_id = atoi(id_text);
+
+        if (cancel_reservation_by_id(patient_id)) {
+            GtkWidget *success_dialog = gtk_message_dialog_new(GTK_WINDOW(data),
+                GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_OK,
+                "Reservation for Patient ID %d has been cancelled.", patient_id);
+            gtk_dialog_run(GTK_DIALOG(success_dialog));
+            gtk_widget_destroy(success_dialog);
+        } else {
+            GtkWidget *error_dialog = gtk_message_dialog_new(GTK_WINDOW(data),
+                GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
+                "No reservation found for Patient ID %d.", patient_id);
+            gtk_dialog_run(GTK_DIALOG(error_dialog));
+            gtk_widget_destroy(error_dialog);
+        }
+    }
+
+    gtk_widget_destroy(dialog);
+}
