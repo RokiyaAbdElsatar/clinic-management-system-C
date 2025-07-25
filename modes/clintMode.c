@@ -162,5 +162,4 @@ void show_clinet_mode(GtkWidget *parent_window)
         gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
 
         gtk_widget_show_all(clinet_window);
-        // gtk_widget_hide(parent_window);
 }

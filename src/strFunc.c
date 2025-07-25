@@ -12,7 +12,6 @@ extern GtkWidget *main_window;
 extern GtkWidget *admin_dashboard;
 
 int attempts = 3;
-// bool is_admin_logged_in = false;
 Patient *head = NULL;
 
 Reservation *res_head = NULL;

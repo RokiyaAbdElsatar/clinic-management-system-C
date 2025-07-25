@@ -79,6 +79,60 @@ void add_patient_window(GtkWidget *parent_window, gpointer data)
     g_signal_connect_swapped(btn_cancel, "clicked", G_CALLBACK(gtk_widget_destroy), dialog);
 }
 
+void show_all_patients_window(GtkWidget *parent_window)
+{
+    GtkWidget *window, *scrolled_window, *treeview;
+    GtkListStore *store;
+    GtkTreeViewColumn *col;
+    GtkCellRenderer *renderer;
+
+    // Create new window
+    window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_title(GTK_WINDOW(window), "All Patients");
+    gtk_window_set_default_size(GTK_WINDOW(window), 400, 300);
+    gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER_ALWAYS);
+
+    // Scrolled window for scrollable list
+    scrolled_window = gtk_scrolled_window_new(NULL, NULL);
+    gtk_container_add(GTK_CONTAINER(window), scrolled_window);
+
+    // Create treeview and store
+    store = gtk_list_store_new(4, G_TYPE_INT, G_TYPE_STRING, G_TYPE_INT, G_TYPE_STRING); // id, name, age, gender
+    treeview = gtk_tree_view_new_with_model(GTK_TREE_MODEL(store));
+    gtk_container_add(GTK_CONTAINER(scrolled_window), treeview);
+
+    // Add columns to treeview
+    renderer = gtk_cell_renderer_text_new();
+    col = gtk_tree_view_column_new_with_attributes("ID", renderer, "text", 0, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), col);
+
+    col = gtk_tree_view_column_new_with_attributes("Name", renderer, "text", 1, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), col);
+
+    col = gtk_tree_view_column_new_with_attributes("Age", renderer, "text", 2, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), col);
+
+    col = gtk_tree_view_column_new_with_attributes("Gender", renderer, "text", 3, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(treeview), col);
+
+    // Fill the store from the linked list
+    GtkTreeIter iter;
+    Patient *current = head;
+    while (current != NULL)
+    {
+        gtk_list_store_append(store, &iter);
+        gtk_list_store_set(store, &iter,
+                           0, current->id,
+                           1, current->name,
+                           2, current->age,
+                           3, current->gender,
+                           -1);
+        current = current->next;
+    }
+
+    gtk_widget_show_all(window);
+}
+
 void on_save_patient_clicked(GtkWidget *widget, gpointer data)
 {
     if (data == NULL)

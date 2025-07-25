@@ -10,7 +10,6 @@ GtkWidget *admin_dashboard;
 GtkListStore *patient_store = NULL;
 GtkTreeView *treeview;
 
-// extern void populate_treeview_from_list(GtkListStore *store);
 
 void show_admin_dashboard(GtkWidget *parent_window)
 {
@@ -23,6 +22,7 @@ void show_admin_dashboard(GtkWidget *parent_window)
     GtkWidget *editBTN;
     GtkWidget *SlotBTN;
     GtkWidget *cancelBTN;
+    GtkWidget *showPatientsBTN;
 
     admin_dashboard = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(admin_dashboard), "Admin Mode");
@@ -58,10 +58,35 @@ void show_admin_dashboard(GtkWidget *parent_window)
     GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
     gtk_container_add(GTK_CONTAINER(glass_box), vbox);
 
-    GtkWidget *button_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
-    gtk_box_pack_start(GTK_BOX(vbox), button_box, FALSE, FALSE, 10);
+    GtkWidget *top_buttons_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
+    gtk_box_pack_start(GTK_BOX(vbox), top_buttons_box, FALSE, FALSE, 10);
+
+    gtk_widget_set_margin_top(top_buttons_box, 150);
+    gtk_widget_set_margin_end(top_buttons_box, 50);
+    gtk_widget_set_margin_start(top_buttons_box, 50);
+
+    GtkWidget *bottom_buttons_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
+    gtk_box_pack_start(GTK_BOX(vbox), bottom_buttons_box, FALSE, FALSE, 10);
+    gtk_widget_set_margin_end(bottom_buttons_box, 50);
+    gtk_widget_set_margin_start(bottom_buttons_box, 50);
+
+
+    GtkWidget *last_button_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
+    gtk_box_pack_start(GTK_BOX(vbox), last_button_box, FALSE, FALSE, 10);
 
     addBTN = gtk_button_new_with_label("Add Patient");
+    editBTN = gtk_button_new_with_label("Edit Patient");
+    SlotBTN = gtk_button_new_with_label("Reserve Slot");
+    cancelBTN = gtk_button_new_with_label("Cancel Reservation");
+    showPatientsBTN = gtk_button_new_with_label("Show Patients");
+
+    gtk_box_pack_start(GTK_BOX(top_buttons_box), addBTN, TRUE, TRUE, 5);
+    gtk_box_pack_start(GTK_BOX(top_buttons_box), editBTN, TRUE, TRUE, 5);
+    gtk_box_pack_start(GTK_BOX(bottom_buttons_box), SlotBTN, TRUE, TRUE, 5);
+    gtk_box_pack_start(GTK_BOX(bottom_buttons_box), cancelBTN, TRUE, TRUE, 5);
+    gtk_box_pack_start(GTK_BOX(last_button_box), showPatientsBTN, TRUE, TRUE, 5);
+
+    // Button styles
 
     GtkCssProvider *provideraddBTN = gtk_css_provider_new();
     gtk_css_provider_load_from_data(provideraddBTN,
@@ -82,7 +107,6 @@ void show_admin_dashboard(GtkWidget *parent_window)
     GtkStyleContext *contextaddBTN = gtk_widget_get_style_context(addBTN);
     gtk_style_context_add_provider(contextaddBTN, GTK_STYLE_PROVIDER(provideraddBTN), GTK_STYLE_PROVIDER_PRIORITY_USER);
 
-    editBTN = gtk_button_new_with_label("Edit Patient");
     GtkCssProvider *providereditBTN = gtk_css_provider_new();
     gtk_css_provider_load_from_data(providereditBTN,
                                     "button {"
@@ -102,7 +126,6 @@ void show_admin_dashboard(GtkWidget *parent_window)
     GtkStyleContext *contexteditBTN = gtk_widget_get_style_context(editBTN);
     gtk_style_context_add_provider(contexteditBTN, GTK_STYLE_PROVIDER(providereditBTN), GTK_STYLE_PROVIDER_PRIORITY_USER);
 
-    SlotBTN = gtk_button_new_with_label("Reserve Slot");
     GtkCssProvider *providerslotBTN = gtk_css_provider_new();
     gtk_css_provider_load_from_data(providerslotBTN,
                                     "button {"
@@ -122,7 +145,6 @@ void show_admin_dashboard(GtkWidget *parent_window)
     GtkStyleContext *contextslotBTN = gtk_widget_get_style_context(SlotBTN);
     gtk_style_context_add_provider(contextslotBTN, GTK_STYLE_PROVIDER(providerslotBTN), GTK_STYLE_PROVIDER_PRIORITY_USER);
 
-    cancelBTN = gtk_button_new_with_label("Cancel Reservation");
     GtkCssProvider *providercancelBTN = gtk_css_provider_new();
     gtk_css_provider_load_from_data(providercancelBTN,
                                     "button {"
@@ -138,52 +160,26 @@ void show_admin_dashboard(GtkWidget *parent_window)
                                     "  min-height: 30px;"
                                     "}",
                                     -1, NULL);
-
     GtkStyleContext *contextcancelBTN = gtk_widget_get_style_context(cancelBTN);
     gtk_style_context_add_provider(contextcancelBTN, GTK_STYLE_PROVIDER(providercancelBTN), GTK_STYLE_PROVIDER_PRIORITY_USER);
 
-    gtk_box_pack_start(GTK_BOX(button_box), addBTN, TRUE, TRUE, 5);
-    gtk_box_pack_start(GTK_BOX(button_box), editBTN, TRUE, TRUE, 5);
-    gtk_box_pack_start(GTK_BOX(button_box), SlotBTN, TRUE, TRUE, 5);
-    gtk_box_pack_start(GTK_BOX(button_box), cancelBTN, TRUE, TRUE, 5);
-
-    GtkWidget *scrolled_window = gtk_scrolled_window_new(NULL, NULL);
-    gtk_widget_set_size_request(scrolled_window, 630, 400);
-    gtk_box_pack_start(GTK_BOX(vbox), scrolled_window, TRUE, TRUE, 10);
-
-    treeview = GTK_TREE_VIEW(gtk_tree_view_new());
-    GtkWidget *tree_view = GTK_WIDGET(treeview);
-
-    GtkCssProvider *providerTable = gtk_css_provider_new();
-    gtk_css_provider_load_from_data(providerTable,
-                                    "treeview, scrolledwindow { background-color: transparent; }",
+    GtkCssProvider *providershowPatientsBTN = gtk_css_provider_new();
+    gtk_css_provider_load_from_data(providershowPatientsBTN,
+                                    "button {"
+                                    "  font-size:18px;"
+                                    "  font-weight:bold;"
+                                    "  font-style:italic;"
+                                    "  background: #01c8ea;"
+                                    "  color: white;"
+                                    "  border-radius: 10px;"
+                                    "  border:1px solid #e8e9eb;"
+                                    "  padding: 10px 20px;"
+                                    "  min-width: 80px;"
+                                    "  min-height: 30px;"
+                                    "}",
                                     -1, NULL);
-
-    GtkStyleContext *context;
-    context = gtk_widget_get_style_context(tree_view);
-    gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(providerTable), GTK_STYLE_PROVIDER_PRIORITY_USER);
-
-    context = gtk_widget_get_style_context(scrolled_window);
-    gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(providerTable), GTK_STYLE_PROVIDER_PRIORITY_USER);
-
-    gtk_container_add(GTK_CONTAINER(scrolled_window), tree_view);
-
-    patient_store = gtk_list_store_new(5, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT, G_TYPE_STRING, G_TYPE_STRING);
-    gtk_tree_view_set_model(GTK_TREE_VIEW(tree_view), GTK_TREE_MODEL(patient_store));
-    treeview = GTK_TREE_VIEW(tree_view);
-
-    // populate_treeview_from_list(patient_store);
-
-    GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
-    GdkRGBA transparent_bg;
-    gdk_rgba_parse(&transparent_bg, "rgba(255, 255, 255, 0.0)");
-    g_object_set(renderer, "cell-background-rgba", &transparent_bg, NULL);
-
-    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(treeview), -1, "ID", renderer, "text", 0, NULL);
-    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(treeview), -1, "Name", renderer, "text", 1, NULL);
-    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(treeview), -1, "Age", renderer, "text", 2, NULL);
-    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(treeview), -1, "Gender", renderer, "text", 3, NULL);
-    gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(treeview), -1, "Slot", renderer, "text", 4, NULL);
+    GtkStyleContext *contextshowPatientsBTN = gtk_widget_get_style_context(showPatientsBTN);
+    gtk_style_context_add_provider(contextshowPatientsBTN, GTK_STYLE_PROVIDER(providershowPatientsBTN), GTK_STYLE_PROVIDER_PRIORITY_USER);
 
     // Connect buttons to their respective functions
 
@@ -191,6 +187,7 @@ void show_admin_dashboard(GtkWidget *parent_window)
     g_signal_connect(editBTN, "clicked", G_CALLBACK(edit_patient_window), admin_dashboard);
     g_signal_connect(SlotBTN, "clicked", G_CALLBACK(slot_patient_window), admin_dashboard);
     g_signal_connect(cancelBTN, "clicked", G_CALLBACK(on_cancel_reservation_clicked), admin_dashboard);
+    g_signal_connect(showPatientsBTN, "clicked", G_CALLBACK(show_all_patients_window), admin_dashboard);
 
     backBTN = gtk_button_new_with_label("Back");
     gtk_fixed_put(GTK_FIXED(fixed), backBTN, 100, 620);

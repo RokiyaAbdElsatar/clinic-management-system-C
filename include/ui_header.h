@@ -24,10 +24,11 @@ extern GtkWidget *patient_reservations_label;
 void show_admin_mode(GtkWidget *parent_window);
 void show_clinet_mode(GtkWidget *parent_window);
 void show_admin_dashboard(GtkWidget *parent_window);
-// void open_admin_window();
 void on_back_clicked(GtkWidget *widget, gpointer data);
 
 void add_patient_window(GtkWidget *parent_window, gpointer data);
+
+void show_all_patients_window(GtkWidget *parent_window);
 
 void on_save_patient_clicked(GtkWidget *widget, gpointer data);
 
