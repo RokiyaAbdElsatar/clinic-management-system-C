@@ -91,9 +91,28 @@ void addPatient(int id, int age, const char *name, const char *gender)
 
     newPatient->id = id;
     newPatient->age = age;
-   strcpy(newPatient->name, name);
-strcpy(newPatient->gender, gender);
+    strcpy(newPatient->name, name);
+    strcpy(newPatient->gender, gender);
     // Add the new patient to the linked list
     newPatient->next = head;
     head = newPatient;
+}
+
+void editPatient(int id, const char *newName, int newAge, const char *newGender)
+{
+    Patient *patient = findByID(id);
+    if (patient != NULL)
+    {
+        if (newName)
+            strcpy(patient->name, newName);
+        if (newAge > 0)
+            patient->age = newAge;
+        if (newGender)
+            strcpy(patient->gender, newGender);
+        g_print("Patient with ID %d updated successfully.\n", id);
+    }
+    else
+    {
+        g_print("Patient with ID %d not found. Cannot edit.\n", id);
+    }
 }
