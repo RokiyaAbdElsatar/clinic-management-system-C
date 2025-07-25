@@ -186,10 +186,10 @@ void show_admin_dashboard(GtkWidget *parent_window)
     gtk_tree_view_insert_column_with_attributes(GTK_TREE_VIEW(treeview), -1, "Slot", renderer, "text", 4, NULL);
 
     // Connect buttons to their respective functions
-    
+
     g_signal_connect(addBTN, "clicked", G_CALLBACK(displayGUI), admin_dashboard);
     g_signal_connect(editBTN, "clicked", G_CALLBACK(edit_patient_window), admin_dashboard);
-   // g_signal_connect(SlotBTN, "clicked", G_CALLBACK(slot_patient_window), admin_dashboard);
+    g_signal_connect(SlotBTN, "clicked", G_CALLBACK(slot_patient_window), admin_dashboard);
 
     backBTN = gtk_button_new_with_label("Back");
     gtk_fixed_put(GTK_FIXED(fixed), backBTN, 100, 620);

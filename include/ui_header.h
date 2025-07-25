@@ -36,3 +36,6 @@ void edit_patient_window(GtkWidget *widget, gpointer user_data);
 void on_find_patient_clicked(GtkWidget *widget, gpointer data);
 
 void on_save_edit_clicked(GtkWidget *widget, gpointer data);
+
+
+void slot_patient_window(GtkWidget *widget, gpointer parent_window);

@@ -152,7 +152,8 @@ void edit_patient_window(GtkWidget *widget, gpointer user_data)
                                          GTK_DIALOG_MODAL,
                                          NULL, NULL);
 
-    if (GTK_IS_WINDOW(parent_window)) {
+    if (GTK_IS_WINDOW(parent_window))
+    {
         gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(parent_window));
     }
 
@@ -221,7 +222,8 @@ void on_find_patient_clicked(GtkWidget *widget, gpointer data)
                                               GTK_DIALOG_MODAL,
                                               NULL, NULL);
 
-    if (GTK_IS_WINDOW(parent_window)) {
+    if (GTK_IS_WINDOW(parent_window))
+    {
         gtk_window_set_transient_for(GTK_WINDOW(edit_dialog), GTK_WINDOW(parent_window));
     }
 
@@ -293,4 +295,87 @@ void on_save_edit_clicked(GtkWidget *widget, gpointer data)
 
     gtk_widget_destroy(edit_fields->dialog);
     g_free(edit_fields);
+}
+
+void slot_patient_window(GtkWidget *widget, gpointer parent_window)
+{
+    GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_title(GTK_WINDOW(window), "Reserve a Slot");
+    gtk_window_set_default_size(GTK_WINDOW(window), 400, 250);
+    gtk_window_set_transient_for(GTK_WINDOW(window), GTK_WINDOW(parent_window));
+    gtk_window_set_modal(GTK_WINDOW(window), TRUE);
+
+    GtkWidget *vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
+    gtk_container_set_border_width(GTK_CONTAINER(vbox), 20);
+    gtk_container_add(GTK_CONTAINER(window), vbox);
+
+    GtkWidget *id_label = gtk_label_new("Enter Patient ID:");
+    GtkWidget *id_entry = gtk_entry_new();
+
+    gtk_box_pack_start(GTK_BOX(vbox), id_label, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(vbox), id_entry, FALSE, FALSE, 0);
+
+    GtkWidget *slot_label = gtk_label_new("Select Slot:");
+    GtkWidget *slot_combo = gtk_combo_box_text_new();
+
+    for (int i = 0; i < SLOT_COUNT; i++)
+    {
+        if (!is_slot_reserved(default_slots[i]))
+        {
+            gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(slot_combo), default_slots[i]);
+        }
+    }
+
+    gtk_box_pack_start(GTK_BOX(vbox), slot_label, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(vbox), slot_combo, FALSE, FALSE, 0);
+
+    GtkWidget *reserve_btn = gtk_button_new_with_label("Reserve");
+    gtk_box_pack_start(GTK_BOX(vbox), reserve_btn, FALSE, FALSE, 0);
+
+    ReservationWidgets *widgets = malloc(sizeof(ReservationWidgets));
+    widgets->id_entry = id_entry;
+    widgets->slot_combo = slot_combo;
+    widgets->window = window;
+
+    g_signal_connect(reserve_btn, "clicked", G_CALLBACK(reserve_slot_button_clicked), widgets);
+
+    gtk_widget_show_all(window);
+}
+void reserve_slot_button_clicked(GtkWidget *widget, gpointer user_data) {
+    ReservationWidgets *widgets = (ReservationWidgets *)user_data;
+    GtkWidget *id_entry = widgets->id_entry;
+    GtkWidget *combo = widgets->slot_combo;
+    GtkWidget *window = widgets->window;
+
+    const gchar *id_text = gtk_entry_get_text(GTK_ENTRY(id_entry));
+    const gchar *slot_text = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(combo));
+
+    if (id_text == NULL || slot_text == NULL || strlen(id_text) == 0) {
+        GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(window),
+            GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+            "Please enter a valid ID and select a slot.");
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+        return;
+    }
+
+    int id = atoi(id_text);
+    if (!is_patient_id_exists(id)) {
+        GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(window),
+            GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+            "Patient ID not found.");
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+        return;
+    }
+
+    add_reservation(id, slot_text);
+
+    GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(window),
+        GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE,
+        "Slot reserved successfully!");
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+    gtk_widget_destroy(window);
+    free(widgets);
 }

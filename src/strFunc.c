@@ -15,6 +15,16 @@ int attempts = 3;
 // bool is_admin_logged_in = false;
 Patient *head = NULL;
 
+Reservation *res_head = NULL;
+
+const char *default_slots[SLOT_COUNT] = {
+    "2:00pm to 2:30pm",
+    "2:30pm to 3:00pm",
+    "3:00pm to 3:30pm",
+    "4:00pm to 4:30pm",
+    "4:30pm to 5:00pm"
+};
+
 void on_login_clicked(GtkWidget *widget, gpointer data)
 {
     const gchar *Enteredpassword = gtk_entry_get_text(GTK_ENTRY(password_Entry));
@@ -79,6 +89,11 @@ Patient *findByID(int id)
     }
     return NULL; // Patient not found
 }
+
+bool is_patient_id_exists(int id) {
+    return findByID(id) != NULL;
+}
+
 void addPatient(int id, int age, const char *name, const char *gender)
 {
     Patient *newPatient = ((Patient *)calloc(1, sizeof(Patient)));
@@ -116,3 +131,24 @@ void editPatient(int id, const char *newName, int newAge, const char *newGender)
         g_print("Patient with ID %d not found. Cannot edit.\n", id);
     }
 }
+
+
+bool is_slot_reserved(const char *slot) {
+    Reservation *curr = res_head;
+    while (curr) {
+        if (strcmp(curr->slot, slot) == 0) return true;
+        curr = curr->next;
+    }
+    return false;
+}
+
+
+void add_reservation(int patient_id, const char *slot) {
+    Reservation *new_res = malloc(sizeof(Reservation));
+    new_res->patient_id = patient_id;
+    strcpy(new_res->slot, slot);
+    new_res->next = res_head;
+    res_head = new_res;
+}
+
+
