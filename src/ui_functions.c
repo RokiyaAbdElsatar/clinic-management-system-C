@@ -341,7 +341,8 @@ void slot_patient_window(GtkWidget *widget, gpointer parent_window)
 
     gtk_widget_show_all(window);
 }
-void reserve_slot_button_clicked(GtkWidget *widget, gpointer user_data) {
+void reserve_slot_button_clicked(GtkWidget *widget, gpointer user_data)
+{
     ReservationWidgets *widgets = (ReservationWidgets *)user_data;
     GtkWidget *id_entry = widgets->id_entry;
     GtkWidget *combo = widgets->slot_combo;
@@ -350,20 +351,22 @@ void reserve_slot_button_clicked(GtkWidget *widget, gpointer user_data) {
     const gchar *id_text = gtk_entry_get_text(GTK_ENTRY(id_entry));
     const gchar *slot_text = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(combo));
 
-    if (id_text == NULL || slot_text == NULL || strlen(id_text) == 0) {
+    if (id_text == NULL || slot_text == NULL || strlen(id_text) == 0)
+    {
         GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(window),
-            GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
-            "Please enter a valid ID and select a slot.");
+                                                   GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+                                                   "Please enter a valid ID and select a slot.");
         gtk_dialog_run(GTK_DIALOG(dialog));
         gtk_widget_destroy(dialog);
         return;
     }
 
     int id = atoi(id_text);
-    if (!is_patient_id_exists(id)) {
+    if (!is_patient_id_exists(id))
+    {
         GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(window),
-            GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
-            "Patient ID not found.");
+                                                   GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+                                                   "Patient ID not found.");
         gtk_dialog_run(GTK_DIALOG(dialog));
         gtk_widget_destroy(dialog);
         return;
@@ -372,49 +375,135 @@ void reserve_slot_button_clicked(GtkWidget *widget, gpointer user_data) {
     add_reservation(id, slot_text);
 
     GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(window),
-        GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE,
-        "Slot reserved successfully!");
+                                               GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_INFO, GTK_BUTTONS_CLOSE,
+                                               "Slot reserved successfully!");
     gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
     gtk_widget_destroy(window);
     free(widgets);
 }
 
+void on_show_patient_clicked(GtkWidget *btn, gpointer user_data)
+{
+    GtkStack *stack = GTK_STACK(user_data);
+    gtk_stack_set_visible_child_name(stack, "patient");
+}
 
-void on_search_clicked(GtkWidget *widget, gpointer data) {
+void on_show_reservation_clicked(GtkWidget *btn, gpointer user_data)
+{
+    GtkStack *stack = GTK_STACK(user_data);
+    gtk_stack_set_visible_child_name(stack, "reservation");
+}
+
+void on_search_clicked(GtkWidget *widget, gpointer data)
+{
     const gchar *id_text = gtk_entry_get_text(GTK_ENTRY(ID_text_Entry));
     int id = atoi(id_text);
 
-    Patient *patient = findByID(id);
+    Patient *found = findByID(id);
+    if (found == NULL)
+    {
+        GtkWidget *dialog = gtk_dialog_new_with_buttons(
+            "Patient Not Found",
+            GTK_WINDOW(main_window),
+            GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+            "_Close", GTK_RESPONSE_CLOSE,
+            NULL);
+        gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ALWAYS);
 
-    if (patient == NULL) {
-        gtk_label_set_text(GTK_LABEL(patient_info_label), "⛔ Patient not found.");
-        gtk_label_set_text(GTK_LABEL(patient_reservations_label), "");
+        GtkWidget *content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+        GtkWidget *label = gtk_label_new(NULL);
+        gtk_label_set_markup(GTK_LABEL(label), "<span foreground='red'>No patient found with this ID.</span>");
+        gtk_container_add(GTK_CONTAINER(content_area), label);
+
+        gtk_widget_show_all(dialog);
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
         return;
     }
 
-    char info[256];
-    snprintf(info, sizeof(info), "👤 Name: %s\n🎂 Age: %d\n🚻 Gender: %s", 
-             patient->name, patient->age, patient->gender);
-    gtk_label_set_text(GTK_LABEL(patient_info_label), info);
+    // Prepare patient info
+    char patient_info[512];
+    sprintf(patient_info,
+            "<span foreground='#0078a9' font='18'><b>Patient Info:-</b></span>\n"
+            "<span foreground='black' font='14'><b>Name: %s\nAge: %d\nGender: %s</b></span>",
+            found->name, found->age, found->gender);
 
-    char reservations[512] = "📅 Your reservations:\n";
-    bool has_res = false;
+    // Prepare reservations info
+    char reservations_info[512] = "<span foreground='#0078a9' font='18'><b>Reservations:</b></span>\n";
+    bool has_reservations = false;
 
     Reservation *current = res_head;
-    while (current != NULL) {
-        if (current->patient_id == id) {
-            strcat(reservations, "✅ ");
-            strcat(reservations, current->slot);
-            strcat(reservations, "\n");
-            has_res = true;
+    while (current != NULL)
+    {
+        if (current->patient_id == id)
+        {
+            strcat(reservations_info, "<span foreground='black' font='14'>");
+            strcat(reservations_info, current->slot);
+            strcat(reservations_info, "</span>\n");
+            has_reservations = true;
         }
         current = current->next;
     }
 
-    if (!has_res) {
-        strcat(reservations, "🔓 No reservations found.");
+    if (!has_reservations)
+    {
+        strcpy(reservations_info, "No reservations for this patient.");
     }
 
-    gtk_label_set_text(GTK_LABEL(patient_reservations_label), reservations);
+    // Create dialog window
+    GtkWidget *dialog = gtk_dialog_new_with_buttons(
+        "Patient Details",
+        GTK_WINDOW(main_window),
+        GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+        "_Close", GTK_RESPONSE_CLOSE,
+        NULL);
+    gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER_ALWAYS);
+
+    GtkWidget *content_area = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
+
+    // Create stack to switch views
+    GtkWidget *stack = gtk_stack_new();
+    gtk_stack_set_transition_type(GTK_STACK(stack), GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT);
+    gtk_stack_set_transition_duration(GTK_STACK(stack), 300);
+
+    GtkWidget *patient_label = gtk_label_new(NULL);
+    gtk_label_set_markup(GTK_LABEL(patient_label), patient_info);
+    gtk_label_set_justify(GTK_LABEL(patient_label), GTK_JUSTIFY_LEFT);
+    gtk_label_set_xalign(GTK_LABEL(patient_label), 0.0);
+    gtk_widget_set_margin_start(patient_label, 15);
+
+    GtkWidget *reservation_label = gtk_label_new(NULL);
+    gtk_label_set_markup(GTK_LABEL(reservation_label), reservations_info);
+    gtk_label_set_justify(GTK_LABEL(reservation_label), GTK_JUSTIFY_LEFT);
+    gtk_label_set_xalign(GTK_LABEL(reservation_label), 0.0);
+    gtk_widget_set_margin_start(reservation_label, 15);
+
+    gtk_stack_add_named(GTK_STACK(stack), patient_label, "patient");
+    gtk_stack_add_named(GTK_STACK(stack), reservation_label, "reservation");
+
+    // Create buttons to switch between views
+    GtkWidget *button_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 10);
+    GtkWidget *show_patient_btn = gtk_button_new_with_label("Show Patient Info");
+    GtkWidget *show_reservation_btn;
+
+    if (has_reservations)
+        show_reservation_btn = gtk_button_new_with_label("Show Reservation Info");
+    else
+        show_reservation_btn = gtk_button_new_with_label("No reservations for this patient.");
+
+    // Connect button signals
+    // Connect button signals
+    g_signal_connect(show_patient_btn, "clicked", G_CALLBACK(on_show_patient_clicked), stack);
+    g_signal_connect(show_reservation_btn, "clicked", G_CALLBACK(on_show_reservation_clicked), stack);
+
+    gtk_box_pack_start(GTK_BOX(button_box), show_patient_btn, TRUE, TRUE, 5);
+    gtk_box_pack_start(GTK_BOX(button_box), show_reservation_btn, TRUE, TRUE, 5);
+
+    gtk_box_pack_start(GTK_BOX(content_area), button_box, FALSE, FALSE, 10);
+    gtk_box_pack_start(GTK_BOX(content_area), stack, TRUE, TRUE, 10);
+
+    gtk_widget_show_all(dialog);
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
 }

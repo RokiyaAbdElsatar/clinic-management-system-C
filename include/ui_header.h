@@ -45,3 +45,7 @@ void on_save_edit_clicked(GtkWidget *widget, gpointer data);
 void slot_patient_window(GtkWidget *widget, gpointer parent_window);
 
 void on_search_clicked(GtkWidget *widget, gpointer data);
+
+void on_show_patient_clicked(GtkWidget *btn, gpointer user_data);
+
+void on_show_reservation_clicked(GtkWidget *btn, gpointer user_data);
