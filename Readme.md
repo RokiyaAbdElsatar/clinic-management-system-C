@@ -2,24 +2,42 @@
 
 A GTK-based desktop application for managing clinic operations, including patient management and appointment slots.
 
+---
+
+## 🔹 Final Project Info
+
+This project is the **final project for C programming Language** of the **1-Month Embedded Systems Training Program** at **ITI**.  
+Supervised by:
+- Eng. Mohamed Gasser  
+- Eng. Asmaa Tarek
+
+---
+
+## 🎥 Preview
+
+
+
 ## Features
 
 - Admin and Client modes with separate interfaces
-- Secure admin login
-- Add, edit, and view patient records
-- Reserve and cancel appointment slots
+- Admin Features:-
+  - Secure admin login
+  - Add, edit, and view patient records
+  - Reserve and cancel appointment slots
+- Client Features:-
+  - Show user info
+  - Show user reservations
+
 - Modern UI with custom styles and background images
 
 ## Project Structure
 
 ```
 .
-├── build/                # Compiled binaries
 ├── images/               # UI background and assets
 ├── include/              # Header files
-├── modes/                # Source files for different modes (admin, client)
+├── modes/                # Source files for (admin, client)
 ├── src/                  # Core source files
-└── .vscode/              # VSCode settings
 ```
 
 ## Installing Dependencies
