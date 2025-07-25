@@ -379,3 +379,42 @@ void reserve_slot_button_clicked(GtkWidget *widget, gpointer user_data) {
     gtk_widget_destroy(window);
     free(widgets);
 }
+
+
+void on_search_clicked(GtkWidget *widget, gpointer data) {
+    const gchar *id_text = gtk_entry_get_text(GTK_ENTRY(ID_text_Entry));
+    int id = atoi(id_text);
+
+    Patient *patient = findByID(id);
+
+    if (patient == NULL) {
+        gtk_label_set_text(GTK_LABEL(patient_info_label), "⛔ Patient not found.");
+        gtk_label_set_text(GTK_LABEL(patient_reservations_label), "");
+        return;
+    }
+
+    char info[256];
+    snprintf(info, sizeof(info), "👤 Name: %s\n🎂 Age: %d\n🚻 Gender: %s", 
+             patient->name, patient->age, patient->gender);
+    gtk_label_set_text(GTK_LABEL(patient_info_label), info);
+
+    char reservations[512] = "📅 Your reservations:\n";
+    bool has_res = false;
+
+    Reservation *current = res_head;
+    while (current != NULL) {
+        if (current->patient_id == id) {
+            strcat(reservations, "✅ ");
+            strcat(reservations, current->slot);
+            strcat(reservations, "\n");
+            has_res = true;
+        }
+        current = current->next;
+    }
+
+    if (!has_res) {
+        strcat(reservations, "🔓 No reservations found.");
+    }
+
+    gtk_label_set_text(GTK_LABEL(patient_reservations_label), reservations);
+}

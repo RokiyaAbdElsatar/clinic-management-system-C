@@ -9,6 +9,9 @@ extern GtkWidget *main_window;
 GtkWidget *ID_text_Entry;
 GtkWidget *SearchBTN;
 
+GtkWidget *patient_info_label;
+GtkWidget *patient_reservations_label;
+
 void show_clinet_mode(GtkWidget *parent_window)
 {
         gtk_widget_hide(main_window);
@@ -105,7 +108,7 @@ void show_clinet_mode(GtkWidget *parent_window)
 
         SearchBTN = gtk_button_new_with_label("Search");
         gtk_fixed_put(GTK_FIXED(fixed), SearchBTN, 490, 400);
-        g_signal_connect(SearchBTN, "clicked", G_CALLBACK("on_search_clicked"), NULL);
+        g_signal_connect(SearchBTN, "clicked", G_CALLBACK(on_search_clicked), NULL);
         GtkCssProvider *providerSearch = gtk_css_provider_new();
         gtk_css_provider_load_from_data(providerSearch,
                                         "button {"
@@ -123,6 +126,16 @@ void show_clinet_mode(GtkWidget *parent_window)
                                         -1, NULL);
         GtkStyleContext *contextSearch = gtk_widget_get_style_context(SearchBTN);
         gtk_style_context_add_provider(contextSearch, GTK_STYLE_PROVIDER(providerSearch), GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+        // Label to show patient info
+        patient_info_label = gtk_label_new("");
+        gtk_fixed_put(GTK_FIXED(fixed), patient_info_label, 200, 460);
+        gtk_widget_set_size_request(patient_info_label, 400, 100);
+
+        // Label to show reservation info
+        patient_reservations_label = gtk_label_new("");
+        gtk_fixed_put(GTK_FIXED(fixed), patient_reservations_label, 200, 530);
+        gtk_widget_set_size_request(patient_reservations_label, 400, 100);
 
         // Back button to return to main window
 

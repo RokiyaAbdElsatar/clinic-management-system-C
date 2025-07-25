@@ -16,6 +16,10 @@ typedef struct EditFields {
     int id;
 } EditFields;
 
+// from clintMode.c
+extern GtkWidget *ID_text_Entry;
+extern GtkWidget *patient_info_label;
+extern GtkWidget *patient_reservations_label;
 
 void show_admin_mode(GtkWidget *parent_window);
 void show_clinet_mode(GtkWidget *parent_window);
@@ -39,3 +43,5 @@ void on_save_edit_clicked(GtkWidget *widget, gpointer data);
 
 
 void slot_patient_window(GtkWidget *widget, gpointer parent_window);
+
+void on_search_clicked(GtkWidget *widget, gpointer data);
