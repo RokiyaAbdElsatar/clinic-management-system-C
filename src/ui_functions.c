@@ -145,7 +145,6 @@ void edit_patient_window(GtkWidget *widget, gpointer user_data)
     GtkWidget *dialog, *content_area, *grid;
     GtkWidget *id_entry, *btn_next;
 
-    // بدلاً من كاست مباشر، نستخدم gtk_widget_get_toplevel
     GtkWidget *parent_window = gtk_widget_get_toplevel(GTK_WIDGET(widget));
 
     dialog = gtk_dialog_new_with_buttons("Edit Patient",
