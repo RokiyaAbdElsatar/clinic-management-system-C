@@ -1,34 +1,31 @@
-// #define Length 50
-// #define maxPatient 5
-// #define maxSlots 5
-
-// typedef struct 
-// {
-//     char name[Length],gender;
-//     int age , id ,reservedSlot ;
-
-// }Patient;
-
-// int addPatient(Patient newPatient);
-// int findByID(int id);
-
+#ifndef STRHEADER_H
+#define STRHEADER_H
 
 typedef struct Patient {
     int id;
     int age;
     char name[50];
-    char disease[50];
-    char doctor[50];
+    char gender[50];
    struct Patient *next;
 } Patient;
 extern Patient *head;
 
 
-void addPatient();
+typedef struct AddPatientData{
+    GtkWidget *entry_name;
+    GtkWidget *entry_age;
+    GtkWidget *entry_gender;
+    GtkWidget *entry_id;
+    GtkWidget *dialog;
+    GtkListStore *store;
+    GtkTreeView *treeview;
+} AddPatientData;
 
-Patient *findByID(int id);
 
-void editPatient(int id); 
-
+void addPatient(int id, int age, const char* name, const char* gender);
+Patient* findByID(int id);
+void editPatient(int id, const char* newName, int newAge, const char* newGender);
 void displayPatients();
 void on_login_clicked(GtkWidget *widget, gpointer data);
+
+#endif 
