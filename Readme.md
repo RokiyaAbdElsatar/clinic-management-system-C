@@ -16,6 +16,10 @@ Supervised by:
 ## 🎥 Preview
 
 
+https://github.com/user-attachments/assets/a57fbefa-66e9-41ac-935c-68794769c127
+
+
+
 
 ## Features
 
