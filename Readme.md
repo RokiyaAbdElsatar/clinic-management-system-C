@@ -8,7 +8,7 @@ A GTK-based desktop application for managing clinic operations, including patien
 
 This project is the **final project for C programming Language** of the **1-Month Embedded Systems Training Program** at **ITI**.  
 Supervised by:
-- Eng. Mohamed Gasser  
+- Eng. Mohamed Gasser <a href="https://www.linkedin.com/in/mohamed-gasser-b1556320b/" style="color:white" target="_blank">[Linkedin]</a> 
 - Eng. Asmaa Tarek <a href="https://www.linkedin.com/in/asmaa-tarek-2405661b3?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" style="color:white" target="_blank">[Linkedin]</a>
 
 ---
