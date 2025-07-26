@@ -85,8 +85,6 @@ sudo apt install build-essential libgtk-3-dev pkg-config
 - Manage patients and appointments via the dashboard.
 
 ## Notes
-
-- All patient data is stored in memory (not persistent).
 - Images for backgrounds are in the `images/` folder.
 
 ## Authors
